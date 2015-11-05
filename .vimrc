@@ -18,7 +18,8 @@ set tags=./tags;/
 set noshelltemp
 "set shell=/bin/sh
 "set guifont=courier_new:h14
-set guifont=Consolas:h14
+"set guifont=Consolas:h14
+set guifont=Monospace\ 10
 set nocompatible
 set number
 set cindent
@@ -42,6 +43,13 @@ colorscheme gruvbox
 execute pathogen#infect()
 "set relativenumber
 set noeb vb t_vb=
+set noerrorbells visualbell t_vb=
+autocmd GUIEnter * set visualbell t_vb=
+
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
 
 " autoreload this file (.vimrc)
 augroup reload_vimrc " {
@@ -183,6 +191,7 @@ call pathogen#helptags()
 filetype plugin indent on
 syntax on
 
+let g:pymode_rope = 0
 let g:pymode_options_max_line_length = 80
 let g:pymode_folding = 0
 let g:pymode_lint = 1
