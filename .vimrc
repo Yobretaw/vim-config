@@ -75,7 +75,7 @@ set guicursor+=i:blinkwait10
 "noremap <Leader>w <Esc>:w<CR>a
 "inoremap <C-s> <Esc>:w<CR>a
 inoremap <C-a> <Esc><S-0>i
-inoremap <C-e> <Esc><S-$>a
+inoremap <C-e> <Esc>A
 inoremap <C-p> <Esc><up><right>i
 inoremap <C-n> <Esc><down><right>i
 inoremap <C-d> <Esc>dd<up>i<left>
