@@ -9,17 +9,16 @@ version 0.83
 "  Size:         This file is about 7K in size and has 500+ lines.
 
 " ===================================================================
-
+"
 inoremap ` <Esc>
-
-
 syntax on
 set tags=./tags;/
 set noshelltemp
 "set shell=/bin/sh
 "set guifont=courier_new:h14
-"set guifont=Consolas:h14
-set guifont=Monospace\ 10
+"set guifont=Consolas:h18
+set macligatures
+set guifont=Fira\ Code:h17
 set nocompatible
 set number
 set cindent
@@ -31,25 +30,21 @@ set softtabstop=4
 set showmatch
 set incsearch
 set encoding=utf-8
-"set completeopt=menuone,longest
 set fileencodings=ucs-bom,utf-8,utf-16,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 set expandtab
 set cursorline
 set autoread
 set shellslash
 set grepprg=grep\ -nH\ $*
+syntax on
+let g:onedark_termcolors=256
+colorscheme onedark
 set background=dark
-colorscheme gruvbox
+"colorscheme gruvbox
+"colorscheme solarized
 execute pathogen#infect()
 "set relativenumber
 set noeb vb t_vb=
-set noerrorbells visualbell t_vb=
-autocmd GUIEnter * set visualbell t_vb=
-
-set guioptions-=m  "remove menu bar
-set guioptions-=T  "remove toolbar
-set guioptions-=r  "remove right-hand scroll bar
-set guioptions-=L  "remove left-hand scroll bar
 
 " autoreload this file (.vimrc)
 augroup reload_vimrc " {
@@ -75,9 +70,9 @@ set guicursor+=i:blinkwait10
 "noremap <Leader>w <Esc>:w<CR>a
 "inoremap <C-s> <Esc>:w<CR>a
 inoremap <C-a> <Esc><S-0>i
-inoremap <C-e> <Esc>A
-inoremap <C-p> <Esc><up><right>i
-inoremap <C-n> <Esc><down><right>i
+inoremap <C-e> <Esc><S-$>a
+"inoremap <C-p> <Esc><up><right>i
+"inoremap <C-n> <Esc><down><right>i
 inoremap <C-d> <Esc>dd<up>i<left>
 inoremap <C-]> <Esc>gt
 inoremap <C-[> <Esc>gT
@@ -121,6 +116,22 @@ map <C-h> <C-w><Left>
 highlight OverLength ctermbg=darkred ctermfg=white guibg=#FFD9D9
 match OverLength /\%10000v.*/
 "au FileType javascript call JavaScriptFold()
+"
+set backup
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backupskip=/tmp/*,/private/tmp/*
+set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set writebackup
+
+
+" Racket setup
+"au BufNewFile,BufRead,BufReadPost *.rkt,*.rktl,*.rktd set filetype=scheme
+if has("autocmd")
+  au BufReadPost *.rkt,*.rktl set filetype=scheme
+endif
+"let g:slimv_lisp=/usr/local/bin/sbcl
+let g:slimv_swank_cmd = '!sh -c "sbcl --load /Users/youkeshen/.vim/bundle/slimv/slime/start-swank.lisp" &'
+let g:lisp_rainbow=1
 
 
 "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -157,33 +168,29 @@ map ++ :w<CR> :!clear; make<CR> :!./%<<CR>
 let g:javascript_conceal = 1
 
 
-
-
-
-
 "==============================================================
 "                           TagList
 "==============================================================
-let Tlist_Use_Right_Window = 0
-let Tlist_Use_Horiz_Window = 1
-nnoremap <F6> :TlistToggle<CR>
+"let Tlist_Use_Right_Window = 0
+"let Tlist_Use_Horiz_Window = 1
+"nnoremap <F6> :TlistToggle<CR>
 
 
 "==============================================================
 "                          TagBar 
 "==============================================================
 "nmap <F8> :TagbarToggle<CR>
-let g:tagbar_width = 30
-let g:tagbar_autopreview = 1
-autocmd BufEnter * nested :call tagbar#autoopen(0)
-autocmd FileType c,cpp,js,java,cc,h,py, nested :TagbarOpen
+"let g:tagbar_width = 30
+"let g:tagbar_autopreview = 1
+"autocmd BufEnter * nested :call tagbar#autoopen(0)
+"autocmd FileType c,cpp,js,java,cc,h,py, nested :TagbarOpen
 "let g:tagbar_previewwin_pos = "topright"
 
 "==============================================================
 "                       Python-mode
 "==============================================================
 " Pathogen load
-filetype off
+filetype on
 
 call pathogen#infect()
 call pathogen#helptags()
@@ -191,12 +198,10 @@ call pathogen#helptags()
 filetype plugin indent on
 syntax on
 
-let g:pymode_rope = 0
 let g:pymode_options_max_line_length = 80
 let g:pymode_folding = 0
 let g:pymode_lint = 1
 let g:pymode_syntax = 1
-
 
 
 "==============================================================
@@ -204,6 +209,20 @@ let g:pymode_syntax = 1
 "==============================================================
 " /bundle/EasyMotion
 nnoremap f H:call EasyMotion#WB(0, 0)<CR>
+
+"map  <Leader>f <Plug>(easymotion-bd-f)
+"nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+"map <Leader>L <Plug>(easymotion-bd-jk)
+"nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+"" Move to word
+"map  <Leader>w <Plug>(easymotion-bd-w)
+"nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 
 "==============================================================
@@ -235,16 +254,21 @@ let g:NERDTreeWinSize=20
 "==============================================================
 "                       Syntastic 
 "==============================================================
-" /bundle/YouCompleteMe
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_ignore_files = ['.html$', '.c$', '.h$', '.java']
-"let g:syntastic_ignore_files = ['.html$']
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 
 "==============================================================
 "                       YouCompleteMe
 "==============================================================
+" Disable YouCompleteMe
+let g:loaded_youcompleteme = 1
  "/bundle/YouCompleteMe
 let g:ycm_show_diagnostics_ui = 1
 let g:ycm_enable_diagnostic_signs = 1
@@ -266,6 +290,8 @@ let g:clang_use_library = 1
 let g:clang_debug = 1
 let g:clang_library_path = '/usr/lib/'
 let g:clang_user_options='|| exit 0'
+let g:ycm_rust_src_path='/usr/local/src/rust/src'
+let g:tex_flavor = 'latex'
 "let g:ycm_filetype_specific_completion_to_disable = {'javascript':1}
 "let g:ycm_filetype_specific_completion_to_disable = {'javascript':1, 'c': 1}
 
@@ -331,23 +357,8 @@ let g:multi_cursor_quit_key = '`'
 "==============================================================
 "                      Airline
 "==============================================================
-let g:airline#extensions#tabline#enabled=1
 
 
-"==============================================================
-"                      vim-nodejs-complete 
-"==============================================================
-
-"let g:nodejs_complete_config = {
-"\  'js_compl_fn': 'jscomplete#CompleteJS',
-"\  'max_node_compl_len': 15
-"\}
-"
-"autocmd FileType javascript
-"  \ :setl omnifunc=jscomplete#CompleteJS
-"
-
-"set g:jscomplete_use
 
 "==============================================================
 "                           Ag
@@ -376,8 +387,6 @@ let g:unite_split_rule="top"
 let g:unite_force_overwrite_statusline=0
 let g:unite_winheight=10
 
-"nnoremap <C-P> :<C-u>Unite  -buffer-name=files -start-insert buffer file_rec/async:!<cr>
-"nnoremap <space>/ :Unite grep:.<CR>
 nnoremap <space>s :Unite -quick-match buffer<cr>
 
 let g:unite_source_rec_max_cache_files=200000000
@@ -402,102 +411,25 @@ function! s:unite_settings()
   nmap <buffer> <ESC> <Plug>(unite_exit)
 endfunction
 
-
 let g:gitgutter_max_signs = 100000
 
 
 "==============================================================
-"                       GoTags 
+"                           FZF 
 "==============================================================
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-
-
-"let g:unite_source_menu_menus.git = {
-"    \ 'description' : '            gestionar repositorios git
-"        \                            ⌘ [espacio]g',
-"    \}
-"let g:unite_source_menu_menus.git.command_candidates = [
-"    \['▷ tig                                                        ⌘ ,gt',
-"        \'normal ,gt'],
-"    \['▷ git status       (Fugitive)                                ⌘ ,gs',
-"        \'Gstatus'],
-"    \['▷ git diff         (Fugitive)                                ⌘ ,gd',
-"        \'Gdiff'],
-"    \['▷ git commit       (Fugitive)                                ⌘ ,gc',
-"        \'Gcommit'],
-"    \['▷ git log          (Fugitive)                                ⌘ ,gl',
-"        \'exe "silent Glog | Unite quickfix"'],
-"    \['▷ git blame        (Fugitive)                                ⌘ ,gb',
-"        \'Gblame'],
-"    \['▷ git stage        (Fugitive)                                ⌘ ,gw',
-"        \'Gwrite'],
-"    \['▷ git checkout     (Fugitive)                                ⌘ ,go',
-"        \'Gread'],
-"    \['▷ git rm           (Fugitive)                                ⌘ ,gr',
-"        \'Gremove'],
-"    \['▷ git mv           (Fugitive)                                ⌘ ,gm',
-"        \'exe "Gmove " input("destino: ")'],
-"    \['▷ git push         (Fugitive, salida por buffer)             ⌘ ,gp',
-"        \'Git! push'],
-"    \['▷ git pull         (Fugitive, salida por buffer)             ⌘ ,gP',
-"        \'Git! pull'],
-"    \['▷ git prompt       (Fugitive, salida por buffer)             ⌘ ,gi',
-"        \'exe "Git! " input("comando git: ")'],
-"    \['▷ git cd           (Fugitive)',
-"        \'Gcd'],
-"    \]
-"nnoremap <silent>[menu]g :Unite -silent -start-insert menu:git<CR>
+set rtp+=~/.fzf
 
 "==============================================================
-"                       VimShell 
+"                           F#
 "==============================================================
-"inoremap <buffer> <expr><silent> <C-.>
+let g:syntastic_fsharp_checkers = ['syntax']
+let g:syntastic_fs_checkers = ['syntax']
+set completeopt-=longest,menuone
+"imap . .<c-x><c-o>
 
 "==============================================================
-"                       ConqueShell
+"                           clang_complete
 "==============================================================
-"let g:ConqueTerm_Color=1
-"let g:ConqueTerm_ReadUnfocused=1
-"let g:ConqueTerm_PromptRegex='^\w\+@[0-9A-Za-z_.-]\+:[0-9A-Za-z_./\~,:-]\+\$'
-"==============================================================
-"                       Insearch
-"==============================================================
-"map /  <Plug>(incsearch-forward)
-"map ?  <Plug>(incsearch-backward)
-"map g/ <Plug>(incsearch-stay)
-"set hlsearch
-"let g:incsearch#auto_nohlsearch = 1
-"map n  <Plug>(incsearch-nohl-n)
-"map N  <Plug>(incsearch-nohl-N)
-"map *  <Plug>(incsearch-nohl-*)
-"map #  <Plug>(incsearch-nohl-#)
-"map g* <Plug>(incsearch-nohl-g*)
-"map g# <Plug>(incsearch-nohl-g#)
-"nnoremap <Esc> :<C-u>nohlsearch<CR>!
-"let g:incsearch#consistent_n_direction = 1
+let g:clang_library_path='/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
+let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_compiler_options = ' -std=c++14 -stdlib=libc++'
