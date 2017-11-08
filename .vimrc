@@ -112,6 +112,8 @@ map <C-j> <C-w><Down>
 map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 
+" Maximize window on startup (only works for Windows)
+au GUIEnter * simalt ~x
 
 highlight OverLength ctermbg=darkred ctermfg=white guibg=#FFD9D9
 match OverLength /\%10000v.*/
